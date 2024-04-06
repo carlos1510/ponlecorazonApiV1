@@ -27,7 +27,7 @@ class CreateEncuestasTable extends Migration
             $table->binary('foto_1')->nullable();
             $table->integer('usersid')->nullable();
             $table->string('usersdni', 15)->nullable();
-            $table->integer('estado');
+            $table->integer('estado')->default(1); // 1=Activo,  0=Inactivo
             $table->timestamps();
         });
     }
