@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\Util;
 use Illuminate\Http\Request;
 
 use App\Models\Encuesta;
@@ -47,9 +48,9 @@ class ApiEncuestaController extends Controller
             $encuesta->nombres = $request->get('nombres');
             $encuesta->apellidos = $request->get('apellidos');
             $encuesta->sexo = $request->get('sexo');
-            $encuesta->fecha_nacimiento = $request->get('fecha_nacimiento');
+            $encuesta->fecha_nacimiento = Util::convertirStringFecha($request->get('fecha_nacimiento'), false);
             $encuesta->direccion = $request->get('direccion');
-            $encuesta->fecha = $request->get('fecha');
+            $encuesta->fecha = Util::convertirStringFecha($request->get('fecha'), false);
             $encuesta->latitud = $request->get('latitud');
             $encuesta->longitud = $request->get('longitud');
             $encuesta->foto_1 = 'uploads/'.$imageName;
