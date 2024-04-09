@@ -24,11 +24,11 @@ class ApiEncuestaController extends Controller
 
     public function  store(Request $request) {
         //$response = ["status" => 'ok', "msg"=> "Encuesta registrada"];
-        //if($request->hasFile('image')){
-          //  $image = $request->file('image');
+        /*if($request->hasFile('image')){
+            $image = $request->file('image');
 
-            //$imageName = time().'_'.$image->getClientOriginalName();
-            //$image->move(public_path('uploads'), $imageName);
+            $imageName = time().'_'.$image->getClientOriginalName();
+            $image->move(public_path('uploads'), $imageName);*/
         if($request->has('image') && $request->filled('image')){
 
             //Decodificar la imagen de base64
@@ -50,12 +50,12 @@ class ApiEncuestaController extends Controller
             $encuesta->fecha_nacimiento = $request->get('fecha_nacimiento');
             $encuesta->direccion = $request->get('direccion');
             $encuesta->fecha = $request->get('fecha');
-            $encuesta->latitud = (Double)$request->get('latitud');
-            $encuesta->longitud = (Double)$request->get('longitud');
+            $encuesta->latitud = $request->get('latitud');
+            $encuesta->longitud = $request->get('longitud');
             $encuesta->foto_1 = 'uploads/'.$imageName;
-            $encuesta->usersid = (int)$request->get('usersid');
+            $encuesta->usersid = $request->get('usersid');
             $encuesta->usersdni = $request->get('usersdni');
-            $encuesta->estado = (int)$request->get('estado');
+            $encuesta->estado = $request->get('estado');
 
             $encuesta->save();
 
