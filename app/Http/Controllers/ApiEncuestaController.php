@@ -60,10 +60,10 @@ class ApiEncuestaController extends Controller
 
             $encuesta->save();
 
-            return response()->json(['image_url' => url('uploads/' . $imageName)], 201);
+            return response()->json($encuesta);
 
         }
-        return response()->json(['message' => 'No image provided'], 400);
+        //return response()->json(['message' => 'No image provided'], 400);
         
     } 
 
