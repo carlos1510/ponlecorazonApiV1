@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Encuesta;
+use PhpParser\Node\Expr\Cast\Double;
 
 class ApiEncuestaController extends Controller
 {
@@ -22,26 +23,47 @@ class ApiEncuestaController extends Controller
     }
 
     public function  store(Request $request) {
-        $response = ["status" => 'ok', "msg"=> "Encuesta registrada"];
-        $params = json_decode($request->getContent());
-        $encuesta = new Encuesta();
-        $encuesta->dni = $params->dni;
-        $encuesta->nombres = $params->nombres;
-        $encuesta->apellidos = $params->apellidos;
-        $encuesta->sexo = $params->sexo;
-        $encuesta->fecha_nacimiento = $params->fecha_nacimiento;
-        $encuesta->direccion = $params->direccion;
-        $encuesta->fecha = $params->fecha;
-        $encuesta->latitud = $params->latitud;
-        $encuesta->longitud = $params->longitud;
-        $encuesta->foto_1 = $params->foto_1;
-        $encuesta->usersid = $params->usersid;
-        $encuesta->usersdni = $params->usersdni;
-        $encuesta->estado = $params->estado;
+        //$response = ["status" => 'ok', "msg"=> "Encuesta registrada"];
+        //if($request->hasFile('image')){
+          //  $image = $request->file('image');
 
-        $encuesta->save();
+            //$imageName = time().'_'.$image->getClientOriginalName();
+            //$image->move(public_path('uploads'), $imageName);
+        if($request->has('image') && $request->filled('image')){
 
-        return response()->json($response);
+            //Decodificar la imagen de base64
+            $image = $request->get('image');
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ','+',$image);
+            $decodedImage = base64_decode($image);
+
+            $imageName = time().'_'.uniqid().'.jpeg';
+            $path = public_path('uploads/' . $imageName);
+            file_put_contents($path, $decodedImage);
+
+            //$params = json_decode($request->getContent());
+            $encuesta = new Encuesta();
+            $encuesta->dni = $request->get('dni');
+            $encuesta->nombres = $request->get('nombres');
+            $encuesta->apellidos = $request->get('apellidos');
+            $encuesta->sexo = $request->get('sexo');
+            $encuesta->fecha_nacimiento = $request->get('fecha_nacimiento');
+            $encuesta->direccion = $request->get('direccion');
+            $encuesta->fecha = $request->get('fecha');
+            $encuesta->latitud = (Double)$request->get('latitud');
+            $encuesta->longitud = (Double)$request->get('longitud');
+            $encuesta->foto_1 = 'uploads/'.$imageName;
+            $encuesta->usersid = (int)$request->get('usersid');
+            $encuesta->usersdni = $request->get('usersdni');
+            $encuesta->estado = (int)$request->get('estado');
+
+            $encuesta->save();
+
+            return response()->json(['image_url' => url('uploads/' . $imageName)], 201);
+
+        }
+        return response()->json(['message' => 'No image provided'], 400);
+        
     } 
 
     public function  update($id, Request $request) {
